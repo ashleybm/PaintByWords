@@ -2,7 +2,7 @@ package com.copeac.paintbywords.model
 
 import java.sql.Date
 
-data class picture(
+data class Picture(
     val id: String,
     val name: String,
     val xSize: Int,
@@ -22,10 +22,10 @@ data class picture(
     }
 
     fun imgPixelSizeX(): Int {
-        return xSize * 3;
+        return xSize * 3
     }
 
     fun imgPixelSizeY(): Int {
-        return ySize * 3;
+        return ySize * 3
     }
 }
