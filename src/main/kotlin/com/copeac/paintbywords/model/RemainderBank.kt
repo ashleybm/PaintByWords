@@ -7,6 +7,6 @@ data class RemainderBank(
     val lastUpdated: Date,
     val pictureId: String,
     val currentTotal: Int,
-    val lastThreeUserDonations: List<String>,
+    val lastThreeUserDonations: List<String>?,
     val lifetimePictureTotal: Int
 )

@@ -9,9 +9,9 @@ data class Picture(
     val ySize: Int,
     val imgCreator: String,
     val dateStarted: Date,
-    val dateCompleted: Date,
+    val dateCompleted: Date?,
     val firstUser: String,
-    val lastUser: String,
+    val lastUser: String?,
     val reminderBankId: String
 ) {
     fun truePixelSizeX(): Int {
