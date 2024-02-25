@@ -1,5 +1,6 @@
 package com.copeac.paintbywords.model
 
+import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.BufferedReader
 import java.io.FileReader
@@ -21,37 +22,51 @@ data class Picture(
 ) {
     fun generateImage(): BufferedImage {
         val generateImage = BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_RGB)
-
-
         recentGeneration = generateImage
         return recentGeneration
     }
 
-    fun convertCSVtoProgressedPicture(csvFilePath: String): List<List<Int>> {
+    /**
+     * Converts a specifically formatted csv file.
+     * Row 0: Creator Credit
+     * Row 1 -> inf: [column, row]
+     * Produces a Buffered Image, and Progressed Picture for the Picture class.
+     */
+    fun convertCSVtoProgressedPicture(csvFilePath: String): Pair<List<List<String>>, BufferedImage> {
         val image = BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_RGB)
         val graphics = image.createGraphics()
+        var hexCodeReference = listOf<String>()
+        val hexList = mutableListOf<MutableList<String>>()
 
         BufferedReader(FileReader(csvFilePath)).use { reader ->
-            var y = 0
+            var y = -1
             var line: String?
             while (reader.readLine().also { line = it } != null) {
                 val values = line!!.split(",")
-                val pictureAsInts = values.map { wordCellCount ->
-                    wordCellCount.toInt()
-
+                if (y == -) {
+                    hexCodeReference = values
+                    y++
+                    continue
                 }
                 var x = 0
+                hexList.add(mutableListOf())
                 for (value in values) {
                     val squareValue = value.trim().toInt()
-                    val squareColor = getColorForSquare(squareValue) // Define the color based on the value
-                    graphics.color = squareColor
+                    val squareColor = hexCodeReference.getColorForSquare(squareValue) // Define the color based on the value
+                    graphics.color = Color.decode(squareColor)
                     graphics.fillRect(x, y, 1, 1) // Draw a single pixel square
+                    hexList[x].add(y, squareColor)
                     x++
                 }
                 y++
             }
-            return TODO()
         }
+        xSize
+        return Pair(hexList, image)
+    }
+
+    private fun List<String>.getColorForSquare(color: Int): String {
+        return this[color]
     }
 
     fun truePixelSizeX(): Int {
